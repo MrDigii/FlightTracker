@@ -13,4 +13,12 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="dlls\" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /d /y &quot;$(ProjectDir)dlls\*.*&quot; &quot;$(OutDir)&quot;" />
+  </Target>
+
 </Project>
