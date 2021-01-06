@@ -5,10 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlightTracker"
         mc:Ignorable="d"
-        Title="Flight Tracker" Height="450" Width="800">
-    <StackPanel>
-        <Button Content="Connect" Click="ConnectClickHandler" Margin="5"/>
-        <Button Content="Close" Click="CloseClickHandler" Margin="5"/>
-        <TextBlock x:Name="StatusText" Text="Not connected!" TextWrapping="Wrap"  FontSize="20" TextAlignment="Center" Margin="5"  />
-    </StackPanel>
+        Title="FS FlightTracker" Height="450" Width="800">
+    <Grid>
+        
+    </Grid>
 </Window>

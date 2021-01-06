@@ -9,7 +9,7 @@ using System.Windows;
 namespace FlightTracker
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// Interaktionslogik für "App.xaml"
     /// </summary>
     public partial class App : Application
     {
