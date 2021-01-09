@@ -2,13 +2,14 @@
 namespace FlightTracker.Models.SimConnect
 {
     using System;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
     using System.Windows.Forms;
     using Microsoft.FlightSimulator.SimConnect;
 
-    public class SimConnectService : IDisposable
+    public class SimConnectService : IDisposable, INotifyPropertyChanged
     {
         #region Private Members
-
         // User-defined win32 event
         private const int WM_USER_SIMCONNECT = 0x0402;
 
@@ -21,16 +22,29 @@ namespace FlightTracker.Models.SimConnect
         // Service name for connecting to SimConnect
         private string _serviceName;
 
+        private bool _isConnected;
         #endregion
 
         #region Properties
-
-        public bool IsConnected { get; private set; }
-
+        public bool IsConnected { 
+            get { return _isConnected; }
+            private set
+            {
+                if (value != _isConnected)
+                {
+                    _isConnected = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         #endregion
 
-        #region Constructor
+        #region Events
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
+
+        #region Constructor
         public SimConnectService(string serviceName)
         {
             _serviceName = serviceName;
@@ -38,11 +52,16 @@ namespace FlightTracker.Models.SimConnect
             _eventsWindow.WndProcCalled += (s, e) => HandleMessage(e);
             IsConnected = false;
         }
-
         #endregion
 
+        // Create the OnPropertyChanged method to raise the event
+        // The calling member's name will be used as the parameter.
+        private void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
         #region Public Methods
-        
         /// <summary>
         /// Connect to SimConnect library
         /// </summary>
@@ -74,11 +93,9 @@ namespace FlightTracker.Models.SimConnect
                 _simConnect = null;
             }
         }
-
         #endregion
 
         #region System Message Handling
-
         /// <summary>
         /// Handling windows events directly
         /// </summary>
@@ -125,7 +142,6 @@ namespace FlightTracker.Models.SimConnect
         {
 
         }
-
         #endregion
 
         public void Dispose()

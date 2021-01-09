@@ -83,6 +83,8 @@
     <Compile Include="Models\SimConnect\SimConnectService.cs" />
     <Compile Include="Models\SimConnect\SystemEventsWindow.cs" />
     <Compile Include="Structs\DataStructs.cs" />
+    <Compile Include="ViewModels\Base\BaseViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -126,9 +128,7 @@
     <Content Include="Lib\Microsoft.FlightSimulator.SimConnect.dll" />
     <Content Include="Vendors\SimConnect.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y /d  "$(ProjectDir)Vendors\SimConnect.dll" "$(ProjectDir)$(OutDir)"
