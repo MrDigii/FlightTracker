@@ -80,10 +80,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\SimConnect\DataDefinition.cs" />
     <Compile Include="Models\SimConnect\SimConnectService.cs" />
     <Compile Include="Models\SimConnect\SystemEventsWindow.cs" />
-    <Compile Include="Structs\DataStructs.cs" />
-    <Compile Include="ViewModels\Base\BaseViewModel.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

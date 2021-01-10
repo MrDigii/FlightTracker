@@ -8,7 +8,9 @@
         Title="FS FlightTracker" Height="450" Width="800">
     <Grid>
       <StackPanel>
-      <TextBlock Height="27" TextWrapping="Wrap" Text="{Binding ConnectionStatus, Mode=OneWay}" FontSize="20" TextAlignment="Center"/>
-    </StackPanel>
+        <Button Content="Connect to Simulator" Height="30" FontSize="16" Command="{Binding ConnectCommand}" />
+        <Button Content="Disconnect" Height="30" FontSize="16" Command="{Binding DisconnectCommand}" />
+        <TextBlock Height="27" TextWrapping="Wrap" Text="{Binding ConnectionStatus, Mode=OneWay}" FontSize="20" TextAlignment="Center"/>
+      </StackPanel>
     </Grid>
 </Window>

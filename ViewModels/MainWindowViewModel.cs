@@ -1,5 +1,7 @@
 ﻿using FlightTracker.Models.SimConnect;
+using FlightTracker.ViewModels.Commands;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace FlightTracker.ViewModels
 {
@@ -16,6 +18,9 @@ namespace FlightTracker.ViewModels
         #endregion
 
         #region Properties
+        public ICommand ConnectCommand { get; set; }
+        public ICommand DisconnectCommand { get; set; }
+
         public string ConnectionStatus
         {
             get { return _connectionStatus; }
@@ -33,13 +38,15 @@ namespace FlightTracker.ViewModels
         #region Constructor
         public MainWindowViewModel()
         {
-            _connectionStatus = "Disconnected";
             _simConnectService = new SimConnectService("FlightTracker");
             _simConnectService.PropertyChanged += HandleSimConnectServicePropertyChanged;
+            _connectionStatus = "Disconnected";
+            ConnectCommand = new RelayCommand(ConnectToSim);
+            DisconnectCommand = new RelayCommand(DisconnectFromSim);
         }
         #endregion
 
-        #region Events
+        #region Service Events
         private void HandleSimConnectServicePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch(e.PropertyName)
@@ -51,6 +58,19 @@ namespace FlightTracker.ViewModels
         }
         #endregion
 
+        #region View Control Helper
+        /// <summary>
+        /// Connect to Simulator with SimConnect Service
+        /// </summary>
+        private void ConnectToSim()
+        {
+            _simConnectService.Connect();
+        }
 
+        private void DisconnectFromSim()
+        {
+            _simConnectService.Disconnect();
+        }
+        #endregion
     }
 }
