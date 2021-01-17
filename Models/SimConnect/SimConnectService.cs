@@ -36,6 +36,7 @@ namespace FlightTracker.Models.SimConnect
         public double latitude;
         public double longitude;
         public double altitude;
+        public double heading;
     };
 
     public class SimConnectService : IDisposable, INotifyPropertyChanged
@@ -52,8 +53,8 @@ namespace FlightTracker.Models.SimConnect
 
         // Service name for connecting to SimConnect
         private string _serviceName;
-
         private bool _isConnected;
+        private FetchLoc _locationData;
         #endregion
 
         #region Properties
@@ -64,6 +65,21 @@ namespace FlightTracker.Models.SimConnect
                 if (value != _isConnected)
                 {
                     _isConnected = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public FetchLoc LocationData
+        {
+            get { return _locationData; }
+            private set
+            {
+                if (value.latitude != _locationData.latitude
+                    || value.longitude != _locationData.longitude 
+                    || value.altitude != _locationData.altitude)
+                {
+                    _locationData = value;
                     OnPropertyChanged();
                 }
             }
@@ -158,6 +174,7 @@ namespace FlightTracker.Models.SimConnect
             _simConnect.AddToDataDefinition(DEFINE_ID.FETCH_LOC, "Plane Latitude", "degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f, SimConnect.SIMCONNECT_UNUSED);
             _simConnect.AddToDataDefinition(DEFINE_ID.FETCH_LOC, "Plane Longitude", "degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f, SimConnect.SIMCONNECT_UNUSED);
             _simConnect.AddToDataDefinition(DEFINE_ID.FETCH_LOC, "Plane Altitude", "feet", SIMCONNECT_DATATYPE.FLOAT64, 0.0f, SimConnect.SIMCONNECT_UNUSED);
+            _simConnect.AddToDataDefinition(DEFINE_ID.FETCH_LOC, "Plane Heading Degrees True", "radians", SIMCONNECT_DATATYPE.FLOAT64, 0.0f, SimConnect.SIMCONNECT_UNUSED);
 
             // IMPORTANT: register it with the simconnect managed wrapper marshaller
             // if you skip this step, you will only receive a uint in the .dwData field.
@@ -200,7 +217,7 @@ namespace FlightTracker.Models.SimConnect
                 // Do something with the user position.
                 // For now just display it in the app UI.
                 FetchInfo loc = (FetchInfo)data.dwData[0];
-                Console.WriteLine(String.Format("Got data: Title: {0}", loc.title));
+                // Console.WriteLine(String.Format("Got data: Title: {0}", loc.title));
             }
 
             
@@ -208,8 +225,8 @@ namespace FlightTracker.Models.SimConnect
             {
                 // Do something with the user position.
                 // For now just display it in the app UI.
-                FetchLoc loc = (FetchLoc)data.dwData[0];
-                Console.WriteLine(String.Format("Got data: Alt: {0} Lat: {1} Lng: {2}", loc.altitude, loc.latitude, loc.longitude));
+                LocationData = (FetchLoc)data.dwData[0];
+                // Console.WriteLine(String.Format("Got data: Alt: {0} Lat: {1} Lng: {2}", LocationData.altitude, LocationData.latitude, LocationData.longitude));
             }
         }
         #endregion
