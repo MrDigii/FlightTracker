@@ -5,7 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using GMap.NET.WindowsPresentation;
 
-namespace FlightTracker.UserControls
+namespace FlightTracker.Views.UserControls
 {
     /// <summary>
     /// Interaction logic for AircraftMarker.xaml

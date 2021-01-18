@@ -9,9 +9,9 @@ using GMap.NET.WindowsPresentation;
 using System.ComponentModel;
 using System.Windows.Shapes;
 using System.Windows.Media;
-using FlightTracker.UserControls;
+using FlightTracker.Views.UserControls;
 
-namespace FlightTracker
+namespace FlightTracker.Views
 {
     /// <summary>
     /// Interaktionslogik für MainWindow.xaml
@@ -25,11 +25,11 @@ namespace FlightTracker
             InitializeComponent();
 
             DataContext = new MainWindowViewModel();
-            (DataContext as MainWindowViewModel).PropertyChanged += HandleViewModelPropertyChange;
+
+            MainWindowViewModel viewModel = DataContext as MainWindowViewModel;
+            viewModel.PropertyChanged += HandleViewModelPropertyChange;
 
             // config map
-            MainWindowViewModel viewModel = DataContext as MainWindowViewModel;
-
             Map.MapProvider = GMapProviders.ArcGIS_World_Topo_Map;
             Map.Position = new PointLatLng(viewModel.Latitude, viewModel.Longitude);
             Map.DragButton = MouseButton.Left;

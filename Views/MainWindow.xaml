@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlightTracker"
         xmlns:ctrl="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
-        x:Class="FlightTracker.MainWindow"
+        x:Class="FlightTracker.Views.MainWindow"
         mc:Ignorable="d"
         Title="FS FlightTracker" Height="450" Width="800"
         Closing="HandleWindowClosing"
@@ -29,8 +29,8 @@
     <Grid x:Name="LayoutRoot">
         <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <StackPanel Margin="10">
-                <Button Style="{StaticResource ConnectBtnStyle}" Content="Connect to Simulator" Height="30" FontSize="16" Command="{Binding ConnectCommand}" />
-                <Button Style="{StaticResource DisconnectBtnStyle}" Content="Disconnect" Height="30" FontSize="16" Command="{Binding DisconnectCommand}" />
+                <Button Style="{StaticResource ConnectBtnStyle}" Content="Connect to Simulator" Height="30" FontSize="16" Margin="5" Command="{Binding ConnectCommand}" />
+                <Button Style="{StaticResource DisconnectBtnStyle}" Content="Disconnect" Height="30" FontSize="16" Margin="5" Command="{Binding DisconnectCommand}" />
                 <TextBlock Height="27" TextWrapping="Wrap" Text="{Binding ConnectionStatus, Mode=OneWay}" FontSize="20" TextAlignment="Center"/>
                 <TextBlock Height="27" TextWrapping="Wrap" Text="{Binding Latitude, Mode=OneWay}" FontSize="20" TextAlignment="Left"/>
                 <TextBlock Height="27" TextWrapping="Wrap" Text="{Binding Longitude, Mode=OneWay}" FontSize="20" TextAlignment="Left"/>
