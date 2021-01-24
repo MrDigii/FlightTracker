@@ -122,6 +122,7 @@
     </ApplicationDefinition>
     <Compile Include="Models\SimConnect\SimConnectService.cs" />
     <Compile Include="Models\SimConnect\SystemEventsWindow.cs" />
+    <Compile Include="Views\GMap\GMapRouteSpline.cs" />
     <Compile Include="Views\UserControls\AircraftMarker.xaml.cs">
       <DependentUpon>AircraftMarker.xaml</DependentUpon>
     </Compile>

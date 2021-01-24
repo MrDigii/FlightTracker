@@ -1,12 +1,20 @@
 ﻿using FlightTracker.Models.SimConnect;
 using FlightTracker.ViewModels.Commands;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Input;
 
 namespace FlightTracker.ViewModels
 {
+    public struct Location
+    {
+        public double lat;
+        public double lng;
+        public long timestamp;
+    }
 
     public class MainWindowViewModel : BaseViewModel
     {
@@ -21,6 +29,8 @@ namespace FlightTracker.ViewModels
         private double _latitude;
         private double _longitude;
         private double _heading;
+
+        private ObservableCollection<Location> _routePoints;
         #endregion
 
         #region Properties
@@ -91,6 +101,12 @@ namespace FlightTracker.ViewModels
                 }
             }
         }
+
+        public ObservableCollection<Location> Route
+        {
+            get { return _routePoints; }
+            private set { _routePoints = value;  }
+        }
         #endregion
 
         #region Constructor
@@ -105,6 +121,7 @@ namespace FlightTracker.ViewModels
             ConnectionStatus = "Disconnected";
             Latitude = 0;
             Longitude = 0;
+            Route = new ObservableCollection<Location>();
         }
         #endregion
 
@@ -121,6 +138,15 @@ namespace FlightTracker.ViewModels
                     Latitude = _simConnectService.LocationData.latitude;
                     Longitude = _simConnectService.LocationData.longitude;
                     Heading = _simConnectService.LocationData.heading;
+
+                    // adding new position to route
+                    Location newLocation = new Location()
+                    {
+                        lat = _simConnectService.LocationData.latitude,
+                        lng = _simConnectService.LocationData.longitude,
+                        timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()
+            };
+                    Route.Add(newLocation);
                     break;
             }
         }

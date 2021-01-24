@@ -10,6 +10,9 @@ using System.ComponentModel;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using FlightTracker.Views.UserControls;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Collections.ObjectModel;
 
 namespace FlightTracker.Views
 {
@@ -18,27 +21,39 @@ namespace FlightTracker.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MainWindowViewModel _viewModel;
         private GMapMarker _aircraftMarker;
+        private List<PointLatLng> _points;
+        private List<PointLatLng> _pointsBuffer;
+        private GMapRoute _gMapRoute;
+        private long _lastPointTimestamp;
 
         public MainWindow()
         {
             InitializeComponent();
 
             DataContext = new MainWindowViewModel();
+            _viewModel = DataContext as MainWindowViewModel;
 
-            MainWindowViewModel viewModel = DataContext as MainWindowViewModel;
-            viewModel.PropertyChanged += HandleViewModelPropertyChange;
+            // setup route
+            _points = new List<PointLatLng>();
+            _pointsBuffer = new List<PointLatLng>();
+            _lastPointTimestamp = 0;
+
+            _viewModel.PropertyChanged += HandleViewModelPropertyChange;
+            _viewModel.Route.CollectionChanged += HandleRouteCollectionChanged;
 
             // config map
             Map.MapProvider = GMapProviders.ArcGIS_World_Topo_Map;
-            Map.Position = new PointLatLng(viewModel.Latitude, viewModel.Longitude);
+            Map.Position = new PointLatLng(_viewModel.Latitude, _viewModel.Longitude);
             Map.DragButton = MouseButton.Left;
             Map.Zoom = 5;
 
-            // set current marker
+            // set current aircraft marker
             _aircraftMarker = new GMapMarker(Map.Position);
             _aircraftMarker.Shape = new AircraftMarker(0);
             _aircraftMarker.Offset = new Point(-20, -20);
+            _aircraftMarker.ZIndex = 10;
 
             Map.Markers.Add(_aircraftMarker);
         }
@@ -75,10 +90,57 @@ namespace FlightTracker.Views
             }
         }
 
+        private void HandleRouteCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                if (e.NewItems != null && e.NewItems.Count > 0)
+                {
+                    // add new points to point list
+                    foreach (ViewModels.Location point in e.NewItems)
+                    {
+                        // set UI route update interval
+                        if (_lastPointTimestamp == 0 || point.timestamp - _lastPointTimestamp >= 800)
+                        {
+                            _lastPointTimestamp = point.timestamp;
+                            _pointsBuffer.Add(new PointLatLng(point.lat, point.lng));
+                        }
+                    }
+
+                    if (_pointsBuffer.Count >= 4)
+                    {
+                        _points.AddRange(_pointsBuffer);
+                        _pointsBuffer.Clear();
+
+                        UpdateRoute();
+                    }
+                }
+            }
+        }
+
+        private void UpdateRoute()
+        {
+            // create new GMap route
+            int index = Map.Markers.IndexOf(_gMapRoute);
+            _gMapRoute = new GMapRouteSpline(_points)
+            {
+                ZIndex = 5
+            };
+
+            if (index == -1) Map.Markers.Add(_gMapRoute);
+            else
+            {
+                Map.Markers.RemoveAt(index);
+                Map.Markers.Add(_gMapRoute);
+            }
+        }
+
         private void HandleWindowClosing(object sender, CancelEventArgs e)
         {
             if (Map != null) Map.Dispose();
-            (DataContext as MainWindowViewModel).PropertyChanged -= HandleViewModelPropertyChange;
+            _viewModel.PropertyChanged -= HandleViewModelPropertyChange;
+            _viewModel.Route.CollectionChanged -= HandleRouteCollectionChanged;
         }
     }
 }
