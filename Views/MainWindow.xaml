@@ -9,16 +9,22 @@
         mc:Ignorable="d"
         Title="FS FlightTracker" Height="450" Width="800"
         Closing="HandleWindowClosing"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
     >
     <Window.Resources>
-        <Style x:Key="ConnectBtnStyle" TargetType="{x:Type Button}">
+        <Style x:Key="ConnectBtnStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsConnectedToSim}" Value="True">
                     <Setter Property="IsEnabled" Value="false" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="DisconnectBtnStyle" TargetType="{x:Type Button}">
+        <Style x:Key="DisconnectBtnStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsConnectedToSim}" Value="False">
                     <Setter Property="IsEnabled" Value="false" />
